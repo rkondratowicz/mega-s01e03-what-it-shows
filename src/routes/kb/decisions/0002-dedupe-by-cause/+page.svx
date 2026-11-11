@@ -1,0 +1,53 @@
+---
+layout: runbook
+title: '0002 · Match report causes, not subject lines'
+owner: Rafal Kondratowicz with OpenCode
+status: proposed
+reviewed: '2026-11-11'
+signature: 'v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjcyOTMiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NDQyMDk0MywiZXhwIjoxNzk0NTA3MzQzfQ.YlP6NHCHSB1krmPkRAE556Ifq5bFSTxGoVd37hV5lZY'
+---
+
+<script>
+  import DedupeExplorer from '#lib/kb/DedupeExplorer.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+**Date:** 11 November 2026. **Scope:** this export review; desk adoption pending.
+
+## Context
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject/) accepted a fast subject-only rule in 2024.
+It is preserved unchanged. The rendered examples now show that subject equality is neither
+necessary nor sufficient for sharing a cause. The [#4471 review](/kb/incidents/4471-review/)
+reconciles the merged reports against the tenant directory and classification code.
+
+## Proposed replacement
+
+1. Deduplicate export rows by report ID, not wording. Retain every distinct reporter record.
+2. Read the report, look up its tenant, and establish the channel and deployed form version.
+3. Use the actual tenant locale's day/month order. Do not substitute browser locale or intake tag.
+4. Merge only when the evidence supports the same underlying cause as the destination ticket.
+   For this export, `sameCause` must return true. A different cause needs its own ticket.
+5. Unknown tenant or unexplained symptoms: keep separate or unplaced and request the missing
+   evidence. A matching subject cannot fill that gap.
+6. Count and link reports per cause. Recompute from the current data; check receipt and merge
+   times separately. Recheck old known pages against the rendered views before relying on them.
+
+## Executable counterexamples
+
+<DedupeExplorer />
+
+- App and email reports from Kettle Books share the parser cause despite different subjects.
+- Alder Physio's form and app reports have the same subject but different causes.
+- Copper Studio and Morrow Tax form reports have the same subject and channel but different causes.
+- Pale Harbour and Alder Physio form reports share the hint cause despite different subjects.
+- Unknown tenants do not establish a shared cause.
+
+## Consequences
+
+Triage costs more reading, but engineering no longer loses a smaller problem inside a large
+known ticket. Keep the two engineering issues linked from the review. Validate fixes separately;
+a parser change does not demonstrate that a booking-v3 hint is correct. Keep uncertainty visible
+instead of turning ambiguous bodies into an unsupported third cause.
+
+<RenderStamp {signature} />

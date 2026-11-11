@@ -1,0 +1,98 @@
+---
+layout: runbook
+title: '#4471 review · two date problems hidden in one known ticket'
+owner: Rafal Kondratowicz with OpenCode
+status: triaged
+reviewed: '2026-11-11'
+signature: 'v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjcyOTMiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NDQyMDk0MywiZXhwIjoxNzk0NTA3MzQzfQ.YlP6NHCHSB1krmPkRAE556Ifq5bFSTxGoVd37hV5lZY'
+---
+
+<script>
+  import Callout from '#lib/kb/Callout.svelte';
+  import ReviewEvidence from '#lib/kb/ReviewEvidence.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import DedupeExplorer from '#lib/kb/DedupeExplorer.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+## Decision for this review
+
+Keep the parser and the booking-form hint as separate problems, each with its own engineering
+ticket. The export's incident narrative says "one issue, one fix queued", but the running
+classification and tenant directory show two causes. A `known` label describes the desk's
+classification; it is not evidence that every report has the same cause, or that a fix shipped.
+
+<Callout kind="warn">
+This is a review of the 4 October 2026 export, not a live view of the support desk. No fix is
+verified here. The original incident page and the accepted 2024 decision are historical evidence,
+not the current rule recommended by this review.
+</Callout>
+
+## Computed scope and tickets
+
+<ReviewEvidence />
+
+The counts use one report per ID, filter `mergedInto === 4471`, and call the supplied
+`groupByCause` / `causeOf` logic with `tenantOf`. The tenant's locale and deployed booking form
+decide the cause. `meta.browserLocale` and `meta.intakeTag` are intake observations, not the rule.
+The two sets are disjoint and account for every unique report in the ticket.
+
+### Parser: month-first interpretation of day-first dates
+
+[Parser ticket](https://github.com/rkondratowicz/mega-s01e03-what-it-shows/issues/1).
+The shared parser treats date text as month/day for tenants whose locale puts the day first.
+For example, `R-41203` reports 2 December becoming 12 February. `R-41205` reports 3 October
+becoming 10 March despite intake tagging it `hint` from an en-US browser.
+
+Engineering should use an explicit date contract at the parsing boundary, validate impossible
+dates, and test day-first and month-first input plus app, email and form paths. Do not silently
+change the form hint and call this fixed: it is a separate path.
+
+### Hint: booking-v3 prints the wrong date order
+
+[Hint ticket](https://github.com/rkondratowicz/mega-s01e03-what-it-shows/issues/2).
+For a day-first tenant, booking-v3 prints `MM/DD/YYYY`, but the form reads the entered date in
+the tenant's day-first order. A customer who follows that hint therefore gets the wrong date.
+The affected form tenants are Alder Physio, Copper Studio and Pale Harbour. Their app and
+email reports still follow the parser rule; tenant name alone is not enough.
+
+For example, `R-41241` is an Alder Physio form report: 6 August became 8 June. Correct the hint
+to match the form's accepted locale order, with tests for booking-v2 and booking-v3. Verify both
+the displayed hint and the date submitted. A shared-parser fix alone does not establish that
+this misleading instruction is repaired.
+
+## What remains uncertain
+
+The desk flagged `R-41202`, `R-41209`, `R-41236`, `R-41344` and `R-41620` as one-day moves.
+Their bodies include a one-day shift, an invite arriving before booking, and different days in
+Lisbon and Toronto. The supplied rule still files all of them under parser. Keep them there for
+this reconciliation, but retain the IDs and request original timestamps, time zones and raw
+inputs before diagnosing a third bug. Do not invent a timezone fix from the wording.
+
+## The queue kept moving
+
+<QueueTimeline ticket={4471} />
+
+Reports arrived in April, May and June before the first merges on 2 July. A July merge spike is
+partly backlog processing, not a July onset. Receipt counts continue into October; marking the
+ticket known did not stop reports. Neither series proves when a fix deployed, how many users
+were affected, or whether the incident is over. Inspect new arrivals against their tenants and
+form versions before moving them; rerun the counts when the export changes.
+
+## Triage by cause, not by subject
+
+The [accepted 2024 decision](/kb/decisions/0001-dedupe-by-subject/) and
+[old triage page](/kb/triage/dedupe/) are well beyond the KB's 180-day review threshold.
+Their confident wording is not a substitute for checking the rendered examples:
+
+<DedupeExplorer />
+
+Different subjects can share a cause. Identical subjects can have different causes because
+the tenant or channel differs. An unknown tenant provides no basis for merging, even when
+the subjects match. Missing evidence should stay unplaced for investigation.
+
+See [decision 0002](/kb/decisions/0002-dedupe-by-cause/) for the replacement rule proposed for
+the desk. It preserves decision 0001 unchanged and records why this review rejects subject-only
+merging. The desk must approve operational adoption; this repo does not change production.
+
+<RenderStamp {signature} />

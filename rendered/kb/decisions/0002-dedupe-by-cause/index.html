@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../../_app/immutable/entry/start.CVWiNQvu.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DebXiFrA.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/CHV9WmEF.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DByVd60g.js" rel="modulepreload">
+		<link href="../../../_app/immutable/entry/app.GhTE_gTl.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DDhba7M9.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/B2FQn8Oi.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/nJeUSIju.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DCRWsIv7.js" rel="modulepreload">
+		<link href="../../../_app/immutable/nodes/0.BENs71BL.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DRs4u-Hy.js" rel="modulepreload">
+		<link href="../../../_app/immutable/nodes/5.D1sdnBI9.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/CUcxmkM9.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/Ca3_XY5O.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/BFK50tOe.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/jj7FaMGs.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/DHhv8Qy4.js" rel="modulepreload">
+		<link href="../../../_app/immutable/chunks/Csb5-B_D.js" rel="modulepreload">
+		<!--e2jw2j--><!----><title>0002 · Match report causes, not subject lines · support kb</title>
+		<link href="../../../_app/immutable/assets/runbook.BhhgOc_n.css" rel="stylesheet">
+		<link href="../../../_app/immutable/assets/DedupeExplorer.C3mwiGDj.css" rel="stylesheet">
+		<link href="../../../_app/immutable/assets/RenderStamp.CMZ6TBbc.css" rel="stylesheet">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[0--><!--[--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">0002 · Match report causes, not subject lines</h1> <p class="meta svelte-e2jw2j"><span>owner <b>Rafal Kondratowicz with OpenCode</b></span> <span class="status proposed svelte-e2jw2j">proposed</span> <span class="svelte-e2jw2j">reviewed 2026-11-11 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p><strong>Date:</strong> 11 November 2026. <strong>Scope:</strong> this export review; desk adoption pending.</p> <h2>Context</h2> <p><a href="/kb/decisions/0001-dedupe-by-subject/">Decision 0001</a> accepted a fast subject-only rule in 2024.
+It is preserved unchanged. The rendered examples now show that subject equality is neither
+necessary nor sufficient for sharing a cause. The <a href="/kb/incidents/4471-review/">#4471 review</a> reconciles the merged reports against the tenant directory and classification code.</p> <h2>Proposed replacement</h2> <ol><li>Deduplicate export rows by report ID, not wording. Retain every distinct reporter record.</li> <li>Read the report, look up its tenant, and establish the channel and deployed form version.</li> <li>Use the actual tenant locale’s day/month order. Do not substitute browser locale or intake tag.</li> <li>Merge only when the evidence supports the same underlying cause as the destination ticket.
+For this export, <code>sameCause</code> must return true. A different cause needs its own ticket.</li> <li>Unknown tenant or unexplained symptoms: keep separate or unplaced and request the missing
+evidence. A matching subject cannot fill that gap.</li> <li>Count and link reports per cause. Recompute from the current data; check receipt and merge
+times separately. Recheck old known pages against the rendered views before relying on them.</li></ol> <h2>Executable counterexamples</h2> <div class="try svelte-gq0h2h"><!--[--><fieldset class="svelte-gq0h2h"><legend>report A</legend> <select aria-label="tenant"><!--[--><option selected="">alder.physio</option><option>copper.studio</option><option>harbour.dental</option><option>kettle.books</option><option>lantern.row</option><option>long.table</option><option>morrow.tax</option><option>nine.lanterns</option><option>pale.harbour</option><option>ridge.clinic</option><option>stone.and.sons</option><!--]--></select> <select aria-label="channel"><!--[--><option>app</option><option>email</option><option selected="">form</option><!--]--></select> <input value="Booking on the wrong date" aria-label="subject"/> <code>hint</code></fieldset><fieldset class="svelte-gq0h2h"><legend>report B</legend> <select aria-label="tenant"><!--[--><option>alder.physio</option><option>copper.studio</option><option>harbour.dental</option><option selected="">kettle.books</option><option>lantern.row</option><option>long.table</option><option>morrow.tax</option><option>nine.lanterns</option><option>pale.harbour</option><option>ridge.clinic</option><option>stone.and.sons</option><!--]--></select> <select aria-label="channel"><!--[--><option>app</option><option>email</option><option selected="">form</option><!--]--></select> <input value="Booking on the wrong date" aria-label="subject"/> <code>parser</code></fieldset><!--]--> <p class="verdict svelte-gq0h2h">different causes — keep apart</p></div> <table><thead><tr><th>case</th><th>same subject</th><th>same cause</th></tr></thead><tbody><!--[--><tr><td>app vs email, same tenant</td><td>no</td><td class="svelte-gq0h2h dup">yes</td></tr><tr><td>same subject, same tenant, different channel</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><tr><td>same subject, same channel, different tenant</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><tr><td>different subject, same way in</td><td>no</td><td class="svelte-gq0h2h dup">yes</td></tr><tr><td>no tenant on file</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><!--]--></tbody></table><!----> <ul><li>App and email reports from Kettle Books share the parser cause despite different subjects.</li> <li>Alder Physio’s form and app reports have the same subject but different causes.</li> <li>Copper Studio and Morrow Tax form reports have the same subject and channel but different causes.</li> <li>Pale Harbour and Alder Physio form reports share the hint cause despite different subjects.</li> <li>Unknown tenants do not establish a shared cause.</li></ul> <h2>Consequences</h2> <p>Triage costs more reading, but engineering no longer loses a smaller problem inside a large
+known ticket. Keep the two engineering issues linked from the review. Validate fixes separately;
+a parser change does not demonstrate that a booking-v3 hint is correct. Keep uncertainty visible
+instead of turning ambiguous bodies into an unsupported third cause.</p> <!--[0--><p class="stamp svelte-1280m42">desk ref <b class="svelte-1280m42">DR-JNQ8-K9B9</b></p><!--]--><!----><!----></main> <footer class="svelte-e2jw2j">Pages are written by people. Tables and charts are built from data at render time.</footer></div><!--]--><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_e3byz7 = {
+						base: new URL("../../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../../_app/immutable/entry/start.CVWiNQvu.js"),
+						import("../../../_app/immutable/entry/app.GhTE_gTl.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

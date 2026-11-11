@@ -1,4 +1,15 @@
-## Problem
+## Outcome: won't fix — closed as not planned
+
+After the initial split was accepted, the [course challenge page](https://hq.mega.dev/challenges/what-it-shows)
+published its engineering update for **#4471 · closed 05 oct**:
+
+> hint — won't fix — booking-v3 form retired
+
+This issue is closed as **not planned**, because the affected form was retired. The hint was not
+fixed. The following scope and initial criteria remain as historical evidence; a closed parent
+ticket does not establish that every contained problem was fixed.
+
+## Original problem
 
 Booking-v3 prints **MM/DD/YYYY** beneath the date field for day-first tenants while the form
 reads the entered value in the tenant's day-first order. People who follow the hint get dates
@@ -23,7 +34,7 @@ Intake tagged 18 as `hint` and 15 as `parser`: neither browser locale nor intake
   Expected: the hint and parser agree on 6 August. The supplied model describes day-first reading,
   yielding 8 June instead. Use this as a production reproduction target; the export is not the form app.
 
-## Acceptance criteria
+## Initial acceptance criteria (superseded by retirement, not implemented)
 
 - [ ] Make booking-v3's displayed date-order hint match the date format actually accepted for the tenant.
 - [ ] Test de-DE, es-ES and pt-PT day-first tenants, and a month-first locale.
@@ -33,7 +44,8 @@ Intake tagged 18 as `hint` and 15 as `parser`: neither browser locale nor intake
 
 ## Status and audit
 
-Open problem; no shipped fix is verified. The old incident's "one issue, one fix queued" does not
+Initially open; now closed as **not planned** on form retirement, with no hint fix claimed.
+The old incident's "one issue, one fix queued" does not
 account for this second cause. Counts describe the 4 October 2026 export, not a live desk snapshot.
 
 - Logic: `src/lib/kb/causes.ts`, `src/lib/kb/locales.ts`; data: `src/lib/data/`.

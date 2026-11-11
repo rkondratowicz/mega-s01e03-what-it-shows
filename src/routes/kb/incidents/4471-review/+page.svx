@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 review · two date problems hidden in one known ticket'
 owner: Rafal Kondratowicz with OpenCode
-status: triaged
+status: closed
 reviewed: '2026-11-11'
 signature: 'v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjcyOTMiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NDQyMDk0MywiZXhwIjoxNzk0NTA3MzQzfQ.YlP6NHCHSB1krmPkRAE556Ifq5bFSTxGoVd37hV5lZY'
 ---
@@ -22,9 +22,25 @@ ticket. The export's incident narrative says "one issue, one fix queued", but th
 classification and tenant directory show two causes. A `known` label describes the desk's
 classification; it is not evidence that every report has the same cause, or that a fix shipped.
 
+## Engineering outcome · 5 October
+
+After the course accepted the initial split, the [challenge page](https://hq.mega.dev/challenges/what-it-shows)
+published a new engineering update: **#4471 closed 05 oct**. It records two different outcomes:
+
+- **Parser — fixed:** `fix(dates): parse dd/mm for eu locales`. The
+  [parser ticket](https://github.com/rkondratowicz/mega-s01e03-what-it-shows/issues/1) is closed as
+  **completed**, based on that desk update.
+- **Hint — won't fix:** `booking-v3 form retired`. The
+  [hint ticket](https://github.com/rkondratowicz/mega-s01e03-what-it-shows/issues/2) is closed as
+  **not planned**, because the affected form was retired, not because its misleading hint was fixed.
+
+The original report counts remain the historical scope of each problem. We did not execute a
+production regression test: the closure evidence is the course's engineering update, not an
+independent deployment check. A closed parent ticket does not mean every contained problem was fixed.
+
 <Callout kind="warn">
-This is a review of the 4 October 2026 export, not a live view of the support desk. No fix is
-verified here. The original incident page and the accepted 2024 decision are historical evidence,
+Counts and symptoms come from the 4 October 2026 export, not a live view. Closure comes from the
+later engineering update above. The original incident page and the accepted 2024 decision are historical evidence,
 not the current rule recommended by this review.
 </Callout>
 
@@ -44,7 +60,7 @@ The shared parser treats date text as month/day for tenants whose locale puts th
 For example, `R-41203` reports 2 December becoming 12 February. `R-41205` reports 3 October
 becoming 10 March despite intake tagging it `hint` from an en-US browser.
 
-Engineering should use an explicit date contract at the parsing boundary, validate impossible
+For regression review, engineering should use an explicit date contract at the parsing boundary, validate impossible
 dates, and test day-first and month-first input plus app, email and form paths. Do not silently
 change the form hint and call this fixed: it is a separate path.
 
@@ -56,8 +72,8 @@ the tenant's day-first order. A customer who follows that hint therefore gets th
 The affected form tenants are Alder Physio, Copper Studio and Pale Harbour. Their app and
 email reports still follow the parser rule; tenant name alone is not enough.
 
-For example, `R-41241` is an Alder Physio form report: 6 August became 8 June. Correct the hint
-to match the form's accepted locale order, with tests for booking-v2 and booking-v3. Verify both
+For example, `R-41241` is an Alder Physio form report: 6 August became 8 June. If this form were
+retained, the hint would need to match its accepted locale order, with tests for booking-v2 and booking-v3. Verify both
 the displayed hint and the date submitted. A shared-parser fix alone does not establish that
 this misleading instruction is repaired.
 

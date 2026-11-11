@@ -61,6 +61,9 @@ for (const path of ['incidents/4471-review', 'decisions/0002-dedupe-by-cause']) 
       assert(html.includes('412 unique reports'));
       assert(html.includes('different causes — keep apart'));
       assert(html.includes('reports received and merged'));
+      assert(html.includes('booking-v3 form retired'));
+      assert(html.includes('not planned'));
+      assert(html.includes('fix(dates): parse dd/mm for eu locales'));
     }
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;

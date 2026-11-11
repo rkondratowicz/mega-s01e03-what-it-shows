@@ -12,7 +12,18 @@
 
 The original 30 files from the 4 October export are preserved byte for byte. Historical accepted
 decision 0001 is not rewritten. Decision 0002 proposes a replacement; this repo does not change
-the live desk or claim its approval. No production fix is verified.
+the live desk or claim its approval. The later course update reports the parser fixed and the
+hint not planned because booking-v3 was retired; neither is an independent production test here.
+
+## Closure evidence
+
+After step one passed, the signed-in course page displayed **#4471 · closed 05 oct**:
+
+- **parser — fixed**: `fix(dates): parse dd/mm for eu locales` → issue #1 closed as `completed`.
+- **hint — won't fix**: `booking-v3 form retired` → issue #2 closed as `not planned`.
+
+Source: <https://hq.mega.dev/challenges/what-it-shows> (course sign-in required).
+The two historical report counts do not change merely because the outcomes changed.
 
 ## Build, test and view
 

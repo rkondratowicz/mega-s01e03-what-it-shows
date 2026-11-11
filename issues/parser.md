@@ -1,4 +1,15 @@
-## Problem
+## Outcome: fixed — closed as completed
+
+After the initial split was accepted, the [course challenge page](https://hq.mega.dev/challenges/what-it-shows)
+published its engineering update for **#4471 · closed 05 oct**:
+
+> parser — fixed — fix(dates): parse dd/mm for eu locales
+
+This issue is closed as **completed** on that explicit outcome, not merely because its parent was
+closed. The following report scope and initial acceptance criteria remain as historical evidence.
+No independent production regression was run in this repo. The hint issue has a different outcome.
+
+## Original problem
 
 The shared parser reads all date text month first. Day-first tenants therefore get swapped
 day/month values in invitations and bookings. This is the parser problem in the #4471 export,
@@ -23,7 +34,7 @@ arrived through a booking-v3 form (which belongs to the separate hint cause).
   The supplied cause model describes month-first interpretation: 12 February.
 - This is an evidence-based reproduction target; the export contains no production parser to execute.
 
-## Acceptance criteria
+## Initial acceptance criteria (not a claim that we ran production tests)
 
 - [ ] Define and enforce the date contract at the parser boundary; do not silently assume month-first.
 - [ ] Cover ambiguous valid dates, day > 12, invalid dates and tenant locale in regression tests.
